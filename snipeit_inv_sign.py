@@ -22,7 +22,7 @@ pdfmetrics.registerFont(TTFont('MyriadPro-Regular', 'fonts/MYRIADPRO-REGULAR.TTF
 config = configparser.ConfigParser()
 config.read('config.ini')
 
-# Get API endpoint and API token from config
+# Get API endpoint and API token from config.ini these are used to create the pdf
 api_endpoint = config['DEFAULT']['api_endpoint']
 api_token = config['DEFAULT']['api_token']
 issuer = config.get('Location', 'issuer')
