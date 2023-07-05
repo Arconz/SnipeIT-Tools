@@ -25,13 +25,12 @@ config.read('config.ini')
 # Get API endpoint and API token from config
 api_endpoint = config['DEFAULT']['api_endpoint']
 api_token = config['DEFAULT']['api_token']
-signature_file = config['DEFAULT']['signature']
-sig_pass = config['DEFAULT']['sig_pass']
-nshe = config.get('Location', 'nshe')
-nshe_bc = config.get('Location', 'nshe_bc')
-nshe_ins = config.get('Location', 'nshe_ins')
-nshe_dep = config.get('Location', 'nshe_dep')
+issuer = config.get('Location', 'issuer')
+issuer_bc = config.get('Location', 'issuer_bc')
+issuer_ins = config.get('Location', 'issuer_ins')
+issuer_dep = config.get('Location', 'issuer_dep')
 no_email = config.get('DEFAULT', 'no_email')
+aup_url = config.get('DEFAULT', 'aup_url')
 
 class TextField(Flowable):
     def __init__(self, **options):
@@ -274,14 +273,14 @@ def generate_pdf(user_name, user_email, user_id, assetdf, accessories_df):
     
     #Header Table
     header_data = [
-        [nshe],
-        [nshe_bc],
-        [TextField(name='Name of lending NSHE Instutution', tooltip='Enter the Name of lending NSHE instutution', value=nshe_ins, width=200, height=16)],
-        ['Name of lending NSHE Instutution'],
-        [TextField(name='Name of lending NSHE Department', tooltip='Enter the Name of lending NSHE department', value=nshe_dep, width=90, height=16)],
-        ['Name of NSHE Lending Department'],
-        [TextField(name='Name of lending NSHE Employee', tooltip='Enter the Name of lending NSHE Employee', value=html.unescape(user_name), width=200, height=16)],
-        ['Name of NSHE Employee'],
+        [issuer],
+        [issuer_bc],
+        [TextField(name='Name of lending issuer Instutution', tooltip='Enter the Name of lending issuer instutution', value=issuer_ins, width=200, height=16)],
+        ['Name of lending issuer Instutution'],
+        [TextField(name='Name of lending issuer Department', tooltip='Enter the Name of lending issuer department', value=issuer_dep, width=90, height=16)],
+        ['Name of issuer Lending Department'],
+        [TextField(name='Name of lending issuer Employee', tooltip='Enter the Name of lending issuer Employee', value=html.unescape(user_name), width=200, height=16)],
+        ['Name of issuer Employee'],
         ['Equipment Loan Agreement'],
     ]
     header = Table(header_data)
@@ -291,10 +290,10 @@ def generate_pdf(user_name, user_email, user_id, assetdf, accessories_df):
         # Add URL link
 
     contact_data= [
-        ['NSHE Employee Name:', TextField(name='employee_name', tooltip='Enter the Name of lending NSHE Employee', value=html.unescape(user_name), width=200, height=16), '', 'Telephone:', TextField(name='Telephone', tooltip='Name of NSHE Employee Telephone', value='775-784-6265', width=90, height=18), ''],
+        ['issuer Employee Name:', TextField(name='employee_name', tooltip='Enter the Name of lending issuer Employee', value=html.unescape(user_name), width=200, height=16), '', 'Telephone:', TextField(name='Telephone', tooltip='Name of issuer Employee Telephone', value='775-784-6265', width=90, height=18), ''],
     ]
     contact_data2= [
-        ['Employee Campus Address:', ChoiceField(name='address', tooltip='Primary Equipment Address', value='NJC 109', options=['NJC 109', 'WRB 1001', 'EJC 239', 'Off Site', 'Hybrid'], width=80, height=18), '', f"{nshe_dep} Email:", TextField(name='Email', tooltip='Name of NSHE Employee email', value=user_email, width=200, height=18)],
+        ['Employee Campus Address:', ChoiceField(name='address', tooltip='Primary Equipment Address', value='NJC 109', options=['NJC 109', 'WRB 1001', 'EJC 239', 'Off Site', 'Hybrid'], width=80, height=18), '', f"{issuer_dep} Email:", TextField(name='Email', tooltip='Name of issuer Employee email', value=user_email, width=200, height=18)],
     ]   
     contact = Table(contact_data)
     contact.setStyle(contact_table)
@@ -302,8 +301,7 @@ def generate_pdf(user_name, user_email, user_id, assetdf, accessories_df):
     contact2.setStyle(contact_table2)
    
     agree_deny = ChoiceField(name='CASAT_AUP', tooltip='AUP Select', value='Accept', options=['Accept', 'Deny'], width=60, height=14)
-    url = 'https://assets.casat.org/AUP/'
-    url_link = f'<a href="{url}"><u>Casat Acceptable Use Policy</u></a>'
+    url_link = f'<a href="{aup_url}"><u>Casat Acceptable Use Policy</u></a>'
 
     signature = []
     authorization = []
@@ -329,7 +327,7 @@ def generate_pdf(user_name, user_email, user_id, assetdf, accessories_df):
     story = []
     
     story.append(header)
-    story.append(Paragraph('The undersigned hereby acknowledges receipt of the equipment listed below, to be in good condition, except as otherwise noted. Nevada System of Higher Education (NSHE) employee may be held responsible for damage or loss of loaned equipment.'))
+    story.append(Paragraph('The undersigned hereby acknowledges receipt of the equipment listed below, to be in good condition, except as otherwise noted. Nevada System of Higher Education (issuer) employee may be held responsible for damage or loss of loaned equipment.'))
     story.append(Paragraph("Assets:", header_style))
     story.append(asset_table)
     story.append(Paragraph("Accessories:", header_style))
